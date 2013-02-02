@@ -21,6 +21,7 @@ dep 'install.managed' do
 	'go',
 	'iproute2',
 	'mesa',
+	'openssh',
 	'python',
 	'python2',
 	'ruby',
