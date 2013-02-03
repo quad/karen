@@ -2,23 +2,8 @@
 
 set -e
 
-PACMAN="pacman --noconfirm"
-SYNC="${PACMAN} --sync"
-QUERY="${PACMAN} --query"
-
-ready_pacman () {
-	${SYNC} --refresh
-}
-
-ok () {
-	type $1
-}
-
 ready_babushka () {
-	PACKAGES="curl ruby"
-	${QUERY} ${PACKAGES} || ${SYNC} ${PACKAGES}
-
-	ok babushka || sh -c "`curl https://babushka.me/up`" < /dev/null
+	type babushka || sh -c "`curl https://babushka.me/up`" < /dev/null
 }
 
 bootstrap () {
@@ -27,6 +12,5 @@ bootstrap () {
 	babushka ${NAME}:bootstrap
 }
 
-ready_pacman
 ready_babushka
 bootstrap karen
