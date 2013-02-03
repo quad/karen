@@ -11,18 +11,14 @@ meta 'fs' do
   accepts_value_for :device
 
   template {
-    def label
-      name.gsub /\.fs$/, ''
-    end
-
-    met? { shell? "blkid -t LABEL=#{label}" }
-    meet { shell! "#{mkfs} --label=#{label} #{device}" }
+    met? { "/dev/disk/by-label/#{basename}".p.exists? }
+    meet { shell! "#{mkfs} --label=#{basename} #{device}" }
   }
 end
 
 dep 'boot.fs', :disk do
   mkfs 'mkfs.btrfs'
-  device `blkid -t PARTLABEL=boot`.split(':').first
+  device '/dev/disk/by-partlabel/boot'
 
   requires 'boot.partition'.with(disk)
 end

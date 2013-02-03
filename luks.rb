@@ -1,7 +1,7 @@
 meta 'luks' do
   template {
     def device
-      `blkid -t PARTLABEL=luks`.split(':').first
+      '/dev/disk/by-partlabel/luks'
     end
   }
 end

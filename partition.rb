@@ -15,15 +15,11 @@ meta 'partition' do
       shell! "sgdisk #{args} #{block_device}"
     end
 
-    def label
-      name.gsub /\.partition$/, ''
-    end
-
-    met? { shell? "blkid -t PARTLABEL=#{label}" }
+    met? { ('/dev/disk/by-partlabel' / basename).p.exist? }
     meet {
       sgdisk "--new=#{number}:0:#{size}"
       sgdisk "--typecode=#{number}:#{code}00"
-      sgdisk "--change-name=#{number}:#{label}"
+      sgdisk "--change-name=#{number}:#{basename}"
       attributes.each do |attr|
         sgdisk "--attributes=#{number}:set:#{attr}"
       end
