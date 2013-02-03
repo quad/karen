@@ -15,7 +15,7 @@ dep 'partition.bootstrap', :disk do
 
   met? { shell? labels.map { |l| "blkid -t PARTLABEL=#{l}" }.join ' && ' }
   meet {
-    parttab.readlines.each { |l| shell! "parted --script --align=optimal #{disk} #{l.chomp}" }
+    parttab.readlines.each { |l| shell! "sgdisk #{l.chomp} #{disk}" }
   }
 end
 
