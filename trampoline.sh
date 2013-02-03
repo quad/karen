@@ -2,7 +2,7 @@
 
 set -e
 
-PACMAN="pacman --quiet --noconfirm"
+PACMAN="pacman --noconfirm"
 SYNC="${PACMAN} --sync"
 QUERY="${PACMAN} --query"
 
@@ -11,7 +11,7 @@ ready_pacman () {
 }
 
 ok () {
-	type $1 > /dev/null
+	type $1
 }
 
 ready_babushka () {
