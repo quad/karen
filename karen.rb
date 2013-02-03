@@ -1,7 +1,33 @@
 dep 'bootstrap', :disk do
   disk.default! '/dev/sda'
 
-  requires 'partition.bootstrap'.with(disk)
+  requires 'boot.fs'.with(disk)
+end
+
+meta 'fs' do
+  accepts_value_for :block_device
+  accepts_value_for :partition
+  accepts_value_for :mkfs
+
+  template {
+    def label
+      name.gsub /\.fs$/, ''
+    end
+
+    def device
+      "#{block_device}#{partition}"
+    end
+
+    setup { requires 'partition.bootstrap'.with(disk) }
+    met? { shell? "blkid -t LABEL=#{label}" }
+    meet { shell! "#{mkfs} --label=#{label} #{device}" }
+  }
+end
+
+dep 'boot.fs', :disk do
+  block_device disk
+  partition 1
+  mkfs 'mkfs.btrfs'
 end
 
 dep 'partition.bootstrap', :disk do
