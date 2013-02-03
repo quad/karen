@@ -2,47 +2,43 @@ dep 'bootstrap', :disk do
   disk.default! '/dev/sda'
 
   requires 'boot.fs'.with(disk)
+  requires 'swap.fs'.with(disk)
+  requires 'root.fs'.with(disk)
 end
 
 meta 'fs' do
-  accepts_value_for :block_device
-  accepts_value_for :partition
   accepts_value_for :mkfs
+  accepts_value_for :device
 
   template {
     def label
       name.gsub /\.fs$/, ''
     end
 
-    def device
-      "#{block_device}#{partition}"
-    end
-
-    setup { requires 'partition.bootstrap'.with(disk) }
     met? { shell? "blkid -t LABEL=#{label}" }
     meet { shell! "#{mkfs} --label=#{label} #{device}" }
   }
 end
 
 dep 'boot.fs', :disk do
-  block_device disk
-  partition 1
   mkfs 'mkfs.btrfs'
+  device `blkid -t PARTLABEL=boot`.split(':').first
+
+  requires 'boot.partition'.with(disk)
 end
 
-dep 'partition.bootstrap', :disk do
-  def labels
-    %w(boot swap root)
-  end
+dep 'swap.fs', :disk do
+  mkfs 'mkswap'
+  device '/dev/lvm/swap'
 
-  def parttab
-    dependency.load_path.parent / 'parttab'
-  end
+  requires 'swap.lv'.with(disk)
+end
 
-  met? { shell? labels.map { |l| "blkid -t PARTLABEL=#{l}" }.join ' && ' }
-  meet {
-    parttab.readlines.each { |l| shell! "sgdisk #{l.chomp} #{disk}" }
-  }
+dep 'root.fs', :disk do
+  mkfs 'mkfs.btrfs'
+  device '/dev/lvm/root'
+
+  requires 'root.lv'.with(disk)
 end
 
 dep 'bootstrap.managed' do
