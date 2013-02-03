@@ -1,0 +1,12 @@
+mklabel gpt
+
+print
+
+unit GB mkpart 8300 0 1
+set 1 legacy_boot on
+
+unit GB mkpart swap 1 8
+
+unit GB mkpart root 8 100%
+
+unit S print

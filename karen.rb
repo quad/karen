@@ -1,3 +1,24 @@
+dep 'bootstrap', :disk do
+  disk.default! '/dev/sda'
+
+  requires 'partition.bootstrap'.with(disk)
+end
+
+dep 'partition.bootstrap', :disk do
+  def labels
+    %w(boot swap root)
+  end
+
+  def parttab
+    dependency.load_path.parent / 'parttab'
+  end
+
+  met? { shell? labels.map { |l| "blkid -t PARTLABEL=#{l}" }.join ' && ' }
+  meet {
+    parttab.readlines.each { |l| shell! "parted --script --align=optimal #{disk} #{l.chomp}" }
+  }
+end
+
 dep 'bootstrap.managed' do
   installs {
     via :pacman,
