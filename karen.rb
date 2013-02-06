@@ -12,7 +12,10 @@ meta 'fs' do
 
   template {
     met? { "/dev/disk/by-label/#{basename}".p.exists? }
-    meet { shell! "#{mkfs} --label=#{basename} #{device}" }
+    meet {
+      shell! "#{mkfs} --label=#{basename} #{device}"
+      shell! 'udevadm trigger'
+    }
   }
 end
 

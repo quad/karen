@@ -15,7 +15,10 @@ dep 'open.luks', :disk do
   requires 'format.luks'.with(disk, keyfile)
 
   met? { '/dev/mapper/luks'.p.exists? }
-  meet { shell "cryptsetup --batch-mode --key-file='#{keyfile}' luksOpen #{device} luks" }
+  meet { 
+    shell "cryptsetup --batch-mode --key-file='#{keyfile}' luksOpen #{device} luks"
+    shell! 'udevadm trigger'
+  }
 end
 
 dep 'format.luks', :disk, :keyfile do
