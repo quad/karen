@@ -23,7 +23,7 @@ meta 'partition' do
       attributes.each do |attr|
         sgdisk "--attributes=#{number}:set:#{attr}"
       end
-      shell 'partprobe'
+      shell 'udevadm settle'
     }
   }
 end
