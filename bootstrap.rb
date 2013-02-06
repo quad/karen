@@ -16,7 +16,7 @@ dep 'stage1.bootstrap', :disk do
 
   met? { '/mnt/root/.babushka/sources/karen/.git'.p.dir? }
   meet {
-    log_shell 'Downloading #{dependency.dep_source.name} deps...',
+    log_shell "Downloading #{dependency.dep_source.name} deps...",
 	      "arch-chroot /mnt babushka sources --add #{dependency.dep_source.name} #{dependency.dep_source.uri}"
   }
 end
