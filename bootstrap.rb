@@ -2,6 +2,7 @@ dep 'bootstrap', :disk do
   disk.default! '/dev/sda'
 
   requires 'stage1.bootstrap'.with(disk)
+  requires 'fstab.bootstrap'.with(disk)
 
   # TODO: What's a better way of doing this?
   met? { shell? "arch-chroot /mnt babushka --dry-run #{dependency.dep_source.name}:stage1" }
@@ -29,6 +30,13 @@ dep 'babushka.bootstrap', :disk do
     log_shell 'Installing babushka...',
               'arch-chroot /mnt sh -c "`curl https://babushka.me/up`"'
   }
+end
+
+dep 'fstab.bootstrap', :disk do
+  requires 'chroot.bootstrap'.with(disk)
+
+  met? { '/mnt/etc/fstab'.p.exists? }
+  meet { shell 'genfstab -U -p /mnt > /mnt/etc/fstab' }
 end
 
 dep 'chroot.bootstrap', :disk do
