@@ -3,7 +3,7 @@ meta 'luks' do
     def cryptsetup command, options={}
       opt_args = options.map { |k, v| "--#{k}='#{v}'" }.join ' '
 
-      shell! "cryptsetup --batch-mode #{opt_args} #{command}"
+      shell? "cryptsetup --batch-mode #{opt_args} #{command}"
     end
   }
 end
