@@ -1,5 +1,5 @@
 dep 'volume group.lvm', :disk do
-  requires 'format.luks'.with(disk)
+  requires 'open.luks'.with(disk)
 
   met? {
     shell! 'lvm vgchange -a y'
