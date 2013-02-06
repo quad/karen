@@ -1,10 +1,21 @@
 dep 'stage1' do
-  #requires 'hostname'
+  requires 'hostname'
   requires 'timezone'
   requires 'locale'
   #requires 'initial ramdisk'
   #requires 'bootloader'
   #requires 'root password'
+end
+
+dep 'hostname', :failed_crush do
+  failed_crush.default! 'karen'
+
+  def content
+    "#{failed_crush}\n"
+  end
+
+  met? { '/etc/hostname'.p.read == content }
+  meet { '/etc/hostname'.p.write content }
 end
 
 dep 'timezone', :zone do
