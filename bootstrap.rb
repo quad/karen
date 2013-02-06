@@ -1,6 +1,7 @@
 dep 'bootstrap', :disk do
   disk.default! '/dev/sda'
 
+  requires 'time sync'
   requires 'stage1.bootstrap'.with(disk)
   requires 'fstab.bootstrap'.with(disk)
 
@@ -10,6 +11,10 @@ dep 'bootstrap', :disk do
     log_shell 'babushka: stage1...',
               "arch-chroot /mnt babushka #{dependency.dep_source.name}:stage1"
   }
+end
+
+dep 'time sync' do
+  met? { shell? 'ntpdate pool.ntp.org' }
 end
 
 dep 'stage1.bootstrap', :disk do

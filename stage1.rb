@@ -3,6 +3,7 @@ dep 'stage1' do
   requires 'timezone'
   requires 'locale'
   requires 'console font'
+  requires 'time adjustment'
   #requires 'initial ramdisk'
   #requires 'bootloader'
   #requires 'root password'
@@ -33,6 +34,11 @@ end
 dep 'console font', :template => 'render' do
   source 'vconsole.conf.erb'
   target '/etc/vconsole.conf'
+end
+
+dep 'time adjustment' do
+  met? { '/etc/adjtime'.p.exists? }
+  meet { shell 'hwclock --systohc --utc' }
 end
 
 dep 'stage1.managed' do
