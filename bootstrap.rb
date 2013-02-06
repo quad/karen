@@ -45,7 +45,7 @@ dep 'filesystems.bootstrap', :disk do
 end
 
 dep 'mounts.bootstrap', :disk do
-  requires 'filesystems.bootstrap'
+  requires 'filesystems.bootstrap'.with(disk)
 
   requires 'root.mnt'.with(disk)
   requires 'boot.mnt'.with(disk)

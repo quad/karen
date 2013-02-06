@@ -2,7 +2,6 @@ meta 'mnt' do
   accepts_value_for :point
 
   template {
-    setup { requires "#{basename}.fs".with(disk) }
     met? { '/etc/mtab'.p.grep /#{point}\b/ }
     meet {
       point.p.mkdir
