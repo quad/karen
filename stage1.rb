@@ -2,6 +2,7 @@ dep 'stage1' do
   requires 'hostname'
   requires 'timezone'
   requires 'locale'
+  requires 'console font'
   #requires 'initial ramdisk'
   #requires 'bootloader'
   #requires 'root password'
@@ -27,6 +28,11 @@ dep 'timezone', :zone do
 
   met? { '/etc/localtime'.p.readlink == zoneinfo }
   meet { shell "ln -sf '#{zoneinfo}' /etc/localtime" }
+end
+
+dep 'console font', :template => 'render' do
+  source 'vconsole.conf.erb'
+  target '/etc/vconsole.conf'
 end
 
 dep 'stage1.managed' do
