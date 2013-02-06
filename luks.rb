@@ -1,31 +1,34 @@
 meta 'luks' do
   template {
+    def luks_map
+      '/dev/mapper/luks'
+    end
+
     def device
       '/dev/disk/by-partlabel/luks'
     end
   }
 end
 
-dep 'open.luks', :disk do
+dep 'format.luks', :disk do
   def keyfile
     'keyfile.passphrase'
   end
 
-  requires 'passphrase.luks'.with(keyfile)
-  requires 'format.luks'.with(disk, keyfile)
+  def cryptsetup command, options={}
+    opt_args = options.map { |k, v| "--#{k}='#{v}'" }.join ' '
 
-  met? { '/dev/mapper/luks'.p.exists? }
-  meet { 
-    shell "cryptsetup --batch-mode --key-file='#{keyfile}' luksOpen #{device} luks"
-    shell! 'udevadm trigger'
-  }
-end
+    shell! "cryptsetup --batch-mode #{opt_args} #{command}"
+  end
 
-dep 'format.luks', :disk, :keyfile do
   requires 'luks.partition'.with(disk)
+  requires 'passphrase.luks'.with(keyfile)
 
-  met? { shell? "cryptsetup isLuks #{device}" }
-  meet { shell! "cryptsetup --batch-mode luksFormat #{device} #{keyfile}" }
+  met? { 
+    cryptsetup "luksClose luks" if luks_map.p.exists?
+    cryptsetup "luksOpen #{device} luks", 'key-file' => keyfile
+  }
+  meet { cryptsetup "luksFormat #{device} #{keyfile}" }
 end
 
 dep 'passphrase.luks', :filename do
