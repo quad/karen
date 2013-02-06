@@ -5,7 +5,7 @@ dep 'stage1' do
   requires 'console font'
   requires 'time adjustment'
   requires 'initial ramdisk'
-  #requires 'bootloader'
+  requires 'bootloader'
   #requires 'root password'
 end
 
@@ -39,6 +39,25 @@ end
 dep 'time adjustment' do
   met? { '/etc/adjtime'.p.exists? }
   meet { shell 'hwclock --systohc --utc' }
+end
+
+dep 'bootloader' do
+  requires 'bootloader.managed'
+  requires 'configuration.bootloader'
+
+  met? { shell 'syslinux-install_update -i -a -m' }
+end
+
+dep 'configuration.bootloader', :template => 'render' do
+  source 'syslinux.cfg.erb'
+  target '/boot/syslinux/syslinux.cfg'
+end
+
+dep 'bootloader.managed' do
+  installs {
+    via :pacman, 'gptfdisk', 'syslinux'
+  }
+  provides ['syslinux-install_update']
 end
 
 dep 'stage1.managed' do
