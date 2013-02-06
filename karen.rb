@@ -5,6 +5,21 @@ dep 'bootstrap', :disk do
 end
 
 dep 'chroot', :disk do
+  requires 'mounts'
+
+  met? { shell? "arch-chroot /mnt true" }
+  meet { log_shell 'Bootstrapping Arch Linux...', 'pacstrap /mnt base base-devel' }
+end
+
+dep 'filesystems', :disk do
+  requires 'boot.fs'.with(disk)
+  requires 'swap.fs'.with(disk)
+  requires 'root.fs'.with(disk)
+end
+
+dep 'mounts', :disk do
+  requires 'filesystems'
+
   requires 'root.mnt'.with(disk)
   requires 'boot.mnt'.with(disk)
   requires 'swap.mnt'.with(disk)
