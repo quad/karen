@@ -1,7 +1,10 @@
 dep 'volume group.lvm', :disk do
   requires 'format.luks'.with(disk)
 
-  met? { shell? 'lvm vgs lvm' }
+  met? {
+    shell! 'lvm vgchange -a y'
+    shell? 'lvm vgs lvm'
+  }
   meet { shell! "lvm vgcreate lvm /dev/mapper/luks" }
 end
 
