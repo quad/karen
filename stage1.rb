@@ -4,7 +4,7 @@ dep 'stage1' do
   requires 'locale'
   requires 'console font'
   requires 'time adjustment'
-  #requires 'initial ramdisk'
+  requires 'initial ramdisk'
   #requires 'bootloader'
   #requires 'root password'
 end
