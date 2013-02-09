@@ -1,3 +1,9 @@
+dep 'stage2' do
+  dep 'text editor'
+end
+
+dep('text editor') { requires dep('vim.managed') }
+
 dep 'stage2.managed' do
   installs {
     via :pacman,
@@ -18,7 +24,6 @@ dep 'stage2.managed' do
 	'tmux',
 	'ttf-dejavu',
 	'ttf-inconsolata',
-	'vim',
 	'xf86-input-synaptics',
 	'xf86-video-intel',
 	'xorg-server',
