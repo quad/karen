@@ -5,6 +5,7 @@ dep 'stage1' do
   requires 'console font'
   requires 'time adjustment'
   requires 'wifi tools'
+  requires 'fstab'
   requires 'initial ramdisk'
   requires 'bootloader'
 end
@@ -39,6 +40,11 @@ end
 dep 'time adjustment' do
   met? { '/etc/adjtime'.p.exists? }
   meet { shell 'hwclock --systohc --utc' }
+end
+
+dep 'fstab', :template => 'render' do
+  source 'fstab.erb'
+  target '/etc/fstab'
 end
 
 dep 'wifi tools' do
