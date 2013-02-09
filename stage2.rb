@@ -9,9 +9,10 @@ dep 'power management.stage2' do
     installs {
       via :pacman,
       'powertop',
-      'laptop-mode-tools'
+      'laptop-mode-tools',
+      'hdparm'
     }
-    provides ['powertop']
+    provides ['powertop', 'laptop_mode']
   }
 
   met? { shell? 'systemctl is-enabled laptop-mode.service' }
