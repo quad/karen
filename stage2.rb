@@ -3,6 +3,7 @@ dep 'stage2' do
   requires 'time sync.stage2'
   requires dep('vim.managed')
   requires 'X.stage2'
+  requires dep('sudo.managed')
 end
 
 dep 'power management.stage2' do
@@ -50,23 +51,3 @@ dep 'X.stage2', :template => 'managed' do
   }
   provides ['startx']
 end
-
-#dep 'stage2.managed' do
-#  installs {
-#    via :pacman,
-#	'alsa-utils',
-#	'awesome',
-#	'btrfs-progs',
-#	'ca-certificates',
-#	'go',
-#	'iproute2',
-#	'openssh',
-#	'python',
-#	'python2',
-#	'ruby',
-#	'sudo',
-#	'surf',
-#	'tmux',
-#  }
-#  provides []
-#end
