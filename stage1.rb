@@ -6,6 +6,7 @@ dep 'stage1' do
   requires 'time adjustment'
   requires 'wifi tools'
   requires 'fstab'
+  requires 'lvm.conf'
   requires 'initial ramdisk'
   requires 'bootloader'
 end
@@ -45,6 +46,11 @@ end
 dep 'fstab', :template => 'render' do
   source 'fstab.erb'
   target '/etc/fstab'
+end
+
+dep 'lvm.conf' do
+  met? { '/etc/lvm/lvm.conf'.p.grep /issue_discards = 1/ }
+  met? { shell! "sed -i'' -e 's/issue_discards = 0/issue_discards = 1/' /etc/lvm/lvm.conf" }
 end
 
 dep 'wifi tools' do
