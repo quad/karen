@@ -4,9 +4,9 @@ dep 'stage1' do
   requires 'locale'
   requires 'console font'
   requires 'time adjustment'
+  requires 'wifi tools'
   requires 'initial ramdisk'
   requires 'bootloader'
-  #requires 'root password'
 end
 
 dep 'hostname', :failed_crush do
@@ -41,15 +41,20 @@ dep 'time adjustment' do
   meet { shell 'hwclock --systohc --utc' }
 end
 
-dep 'stage1.managed' do
+dep 'wifi tools' do
+  requires 'wifi tools.managed'
+
+  met? { shell? 'systemctl is-enabled net-auto-wireless.service' }
+  meet { shell 'systemctl enable net-auto-wireless.service' }
+end
+
+dep 'wifi tools.managed' do
   installs {
     via :pacman,
-	'dialog',
-	'gptfdisk',
-	'syslinux',
+        'dialog',
 	'wireless_tools',
 	'wpa_actiond',
 	'wpa_supplicant'
   }
-  provides []
+  provides ['wifi-menu']
 end
