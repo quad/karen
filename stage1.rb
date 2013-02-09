@@ -55,6 +55,7 @@ end
 
 dep 'wifi tools' do
   requires 'wifi tools.managed'
+  requires 'netcfg'
 
   met? { shell? 'systemctl is-enabled net-auto-wireless.service' }
   meet { shell 'systemctl enable net-auto-wireless.service' }
@@ -69,4 +70,9 @@ dep 'wifi tools.managed' do
 	'wpa_supplicant'
   }
   provides ['wifi-menu']
+end
+
+dep 'netcfg', :template => 'render' do
+  source 'netcfg.erb'
+  target '/etc/conf.d/netcfg'
 end
