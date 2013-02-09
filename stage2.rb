@@ -2,6 +2,7 @@ dep 'stage2' do
   requires 'power management.stage2'
   requires 'time sync.stage2'
   requires dep('vim.managed')
+  requires 'X.stage2'
 end
 
 dep 'power management.stage2' do
@@ -35,6 +36,21 @@ dep 'chrony configuration', :template => 'render' do
   target '/etc/chrony.conf'
 end
 
+dep 'X.stage2', :template => 'managed' do
+  installs {
+    via :pacman,
+	'mesa',
+	'ttf-dejavu',
+	'ttf-inconsolata',
+	'xf86-input-synaptics',
+	'xf86-video-intel',
+	'xorg-server',
+	'xorg-server-utils',
+	'xorg-xinit'
+  }
+  provides ['startx']
+end
+
 #dep 'stage2.managed' do
 #  installs {
 #    via :pacman,
@@ -44,22 +60,13 @@ end
 #	'ca-certificates',
 #	'go',
 #	'iproute2',
-#	'mesa',
 #	'openssh',
 #	'python',
 #	'python2',
 #	'ruby',
-#	'rxvt-unicode',
 #	'sudo',
 #	'surf',
 #	'tmux',
-#	'ttf-dejavu',
-#	'ttf-inconsolata',
-#	'xf86-input-synaptics',
-#	'xf86-video-intel',
-#	'xorg-server',
-#	'xorg-server-utils',
-#	'xorg-xinit'
 #  }
 #  provides []
 #end
