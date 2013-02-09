@@ -1,0 +1,17 @@
+server 0.asia.pool.ntp.org
+server 1.asia.pool.ntp.org
+server 2.asia.pool.ntp.org
+server 3.asia.pool.ntp.org
+
+maxupdateskew 5
+
+driftfile /etc/chrony.drift
+
+keyfile /etc/chrony.keys
+commandkey 1
+
+pidfile /var/run/chronyd.pid
+
+logchange 0.5
+
+cmdallow 127.0.0.1
