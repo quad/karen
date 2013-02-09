@@ -1,7 +1,7 @@
 dep 'stage2' do
   requires 'power management.stage2'
   requires 'time sync.stage2'
-  requires 'stage2.managed'
+  requires dep('vim.managed')
 end
 
 dep 'power management.stage2' do
@@ -35,10 +35,9 @@ dep 'chrony configuration', :template => 'render' do
   target '/etc/chrony.conf'
 end
 
-dep 'stage2.managed' do
-  installs {
-    via :pacman,
-        'vim'
+#dep 'stage2.managed' do
+#  installs {
+#    via :pacman,
 #	'alsa-utils',
 #	'awesome',
 #	'btrfs-progs',
@@ -61,6 +60,6 @@ dep 'stage2.managed' do
 #	'xorg-server',
 #	'xorg-server-utils',
 #	'xorg-xinit'
-  }
-  provides []
-end
+#  }
+#  provides []
+#end
